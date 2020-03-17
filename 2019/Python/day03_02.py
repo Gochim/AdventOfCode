@@ -43,14 +43,36 @@ def get_intersections(f_item, f_prev_item, s_item, s_prev_item):
     """
     line1 = LineString([f_prev_item, f_item])
     line2 = LineString([s_prev_item, s_item])
-    result = line1.intersection(line2)
 
+    result = line1.intersection(line2)
     if result.is_empty:
         result = None
     elif result.geom_type is "Point" and result.x == 0 and result.y == 0:
         result = None
-    elif result.geom_type is not "Point":  # for debug purposes
+    elif result.geom_type is not "Point": # for debug purposes
         raise ValueError("Not a point")
+
+    return result
+
+
+def get_steps(point, route):
+    """
+    Calculate distance between start and intersection point
+    :param point:
+    :param route:
+    :return:
+    """
+    result = 0
+    route_len = len(route)
+    for index in range(1, route_len):
+        line = LineString([route[index - 1], route[index]])
+        part_of = line.contains(point)
+        if part_of:
+            line = LineString([route[index - 1], (point.x, point.y)])
+            result = result + line.length
+            break
+        else:
+            result = result + line.length
 
     return result
 
@@ -72,20 +94,23 @@ def main():
     print(first_route)
     print(second_route)
 
-    min_distance = None
+    intersections = []
     f_len, s_len = len(first_route), len(second_route)
     for s_index in range(1, s_len):
         for f_index in range(1, f_len):
             # check if they have intersection and get their position
             intersection = get_intersections(
                 first_route[f_index], first_route[f_index - 1],
-                second_route[s_index], second_route[s_index - 1]
-            )
+                second_route[s_index], second_route[s_index - 1])
 
             if intersection is not None:
-                distance = abs(intersection.x) + abs(intersection.y)
-                if min_distance is None or (distance < min_distance):
-                    min_distance = distance
+                intersections.append(intersection)
+
+    min_distance = None
+    for isc in intersections:
+        distance = get_steps(isc, first_route) + get_steps(isc, second_route)
+        if min_distance is None or (distance < min_distance):
+            min_distance = distance
 
     print(min_distance)
 
