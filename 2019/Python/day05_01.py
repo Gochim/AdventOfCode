@@ -55,9 +55,7 @@ def decode_command_params(code):
     param_mode_3 = code % 10
     code //= 10
 
-    result = (command, param_mode_1, param_mode_2, param_mode_3)
-
-    return result
+    return command, param_mode_1, param_mode_2, param_mode_3
 
 
 def get_data(input_data, index, param_mode):
@@ -80,9 +78,7 @@ def main():
         com_params = decode_command_params(input_data[index])
 
         if com_params[0] is COMMAND_ADD:
-            first = get_data(input_data, index + 1, com_params[1])
-            second = get_data(input_data, index + 2, com_params[2])
-            result = first + second
+            result = get_data(input_data, index + 1, com_params[1]) + get_data(input_data, index + 2, com_params[2])
             input_data[input_data[index + 3]] = result
             index = index + 4
         elif com_params[0] is COMMAND_MLT:
