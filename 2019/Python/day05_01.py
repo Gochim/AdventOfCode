@@ -92,6 +92,8 @@ def main():
             diag_code = get_data(input_data, index + 1, com_params[1])
             print("{} after {} steps".format(diag_code, steps))
             index += 2
+        else:
+            raise ValueError("Unknown command")
 
         steps += 1
 

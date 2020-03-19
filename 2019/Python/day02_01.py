@@ -9,6 +9,7 @@ COMMAND_HALT = 99
 COMMAND_ADD = 1
 COMMAND_MLT = 2
 
+
 def main():
     index = 0
     while input_data[index] is not COMMAND_HALT:
@@ -16,10 +17,11 @@ def main():
             result = input_data[input_data[index+1]] + input_data[input_data[index + 2]]
         elif input_data[index] is COMMAND_MLT:
             result = input_data[input_data[index + 1]] * input_data[input_data[index + 2]]
+        else:
+            raise ValueError("Unknown command")
 
         input_data[input_data[index+3]] = result
-
-        index = index + 4
+        index += 4
 
     print(input_data[0])
 
