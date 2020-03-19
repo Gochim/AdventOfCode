@@ -80,18 +80,18 @@ def main():
         if com_params[0] is COMMAND_ADD:
             result = get_data(input_data, index + 1, com_params[1]) + get_data(input_data, index + 2, com_params[2])
             input_data[input_data[index + 3]] = result
-            index = index + 4
+            index += 4
         elif com_params[0] is COMMAND_MLT:
             result = get_data(input_data, index + 1, com_params[1]) * get_data(input_data, index + 2, com_params[2])
             input_data[input_data[index + 3]] = result
-            index = index + 4
+            index += 4
         elif com_params[0] is COMMAND_INPUT:
             input_data[input_data[index + 1]] = input_value
-            index = index + 2
+            index += 2
         elif com_params[0] is COMMAND_OUTPUT:
             diag_code = get_data(input_data, index + 1, com_params[1])
             print("{} after {} steps".format(diag_code, steps))
-            index = index + 2
+            index += 2
 
         steps += 1
 
