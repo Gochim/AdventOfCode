@@ -26,6 +26,7 @@ def check_cond(number):
     return double and rising
 
 
+# Task - https://adventofcode.com/2019/day/4
 def main():
     # print(check_cond(278888)) # False
     # print(check_cond(788013)) # False

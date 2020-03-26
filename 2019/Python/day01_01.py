@@ -1,6 +1,7 @@
 import math
 
 
+# Task - https://adventofcode.com/2019/day/1
 def main():
     data = open("day01_01.txt", 'r')
     final = 0
@@ -12,5 +13,5 @@ def main():
     return
 
 
-if __name__ == '__main__':  # Если мы запускаем файл напрямую, а не импортируем
-    main()  # то запускаем функцию main()
+if __name__ == '__main__':
+    main()

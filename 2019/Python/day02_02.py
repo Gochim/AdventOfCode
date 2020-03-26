@@ -14,6 +14,7 @@ COMMAND_ADD = 1
 COMMAND_MLT = 2
 
 
+# Task - https://adventofcode.com/2019/day/2
 def main():
     for i in range(0, 100):
         for j in range(0, 100):

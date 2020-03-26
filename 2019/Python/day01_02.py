@@ -5,6 +5,7 @@ def positive(value):
     return 0 if value < 0 else value
 
 
+# Task - https://adventofcode.com/2019/day/1
 def main():
     data = open("day01_01.txt", 'r')
     final = 0

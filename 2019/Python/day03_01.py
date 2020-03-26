@@ -55,6 +55,7 @@ def get_intersections(f_item, f_prev_item, s_item, s_prev_item):
     return result
 
 
+# Task - https://adventofcode.com/2019/day/3
 def main():
     # I don't like the solution. It can be much more optimized
 

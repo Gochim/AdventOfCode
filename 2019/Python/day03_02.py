@@ -77,6 +77,7 @@ def get_steps(point, route):
     return result
 
 
+# Task - https://adventofcode.com/2019/day/3
 def main():
     # I don't like the solution. It can be much more optimized
 
