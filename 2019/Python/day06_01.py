@@ -1,14 +1,3 @@
-class SpaceObject:
-
-    def __init__(self) -> None:
-        self.children = []
-        self.orbits = 0
-
-    def place_element(self, parent):
-        self.orbits = parent.orbits + 1
-        parent.children.append(self)
-
-
 # Task - https://adventofcode.com/2019/day/6
 def main():
     list_of_orbits = {}
