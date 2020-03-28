@@ -1,9 +1,11 @@
-# Task - https://adventofcode.com/2019/day/6
-def main():
+def map_system():
+    """
+    Read data and put it into map with the full list of orbiting bodies around each space object
+    :return:
+    """
     list_of_orbits = {}
     data = open("day06.txt", 'r')
 
-    # read data
     for pair in data:
         center, orbiting_body = pair.rstrip().split(")")
 
@@ -15,6 +17,13 @@ def main():
             list_of_orbits[center] = [orbiting_body]
 
     data.close()
+
+    return list_of_orbits
+
+
+# Task - https://adventofcode.com/2019/day/6
+def main():
+    list_of_orbits = map_system()
 
     # wide run through all elements connected to the COM
     current_orbital_set = set()
