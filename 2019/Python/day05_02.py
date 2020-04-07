@@ -147,8 +147,11 @@ def main():
     while decode_command_params(input_data[index])[0] is not COMMAND_HALT:
         com_params = decode_command_params(input_data[index])
 
-        func = command_map.get(com_params[0], lambda: "Unknown command")
-        index = func(input_data, index, com_params, (input_value, steps))
+        func = command_map.get(com_params[0])
+        if func is None:
+            raise ValueError("Unknown command")
+        else:
+            index = func(input_data, index, com_params, (input_value, steps))
 
         steps += 1
 
