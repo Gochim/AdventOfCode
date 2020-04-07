@@ -31,18 +31,10 @@ starting_data = [3, 225, 1, 225, 6, 6, 1100, 1, 238, 225, 104, 0, 1101, 32, 43, 
                  223, 223, 8, 677, 677, 224, 102, 2, 223, 223, 1005, 224, 659, 1001, 223, 1, 223, 108, 677, 677, 224,
                  1002, 223, 2, 223, 1005, 224, 674, 101, 1, 223, 223, 4, 223, 99, 226]
 
-COMMAND_HALT = 99
-COMMAND_ADD = 1
-COMMAND_MLT = 2
-COMMAND_INPUT = 3
-COMMAND_OUTPUT = 4
-COMMAND_JUMP_IF_TRUE = 5
-COMMAND_JUMP_IF_FALSE = 6
-COMMAND_LESS_THAN = 7
-COMMAND_EQUALS = 8
-
 PARAMETER_MODE_POSITION = 0
 PARAMETER_MODE_VALUE = 1
+
+COMMAND_HALT = 99
 
 
 def decode_command_params(code):
@@ -71,6 +63,77 @@ def get_data(input_data, index, param_mode):
     return result
 
 
+def command_add(input_data, index, com_params, adt_params):
+    result = get_data(input_data, index + 1, com_params[1]) + get_data(input_data, index + 2, com_params[2])
+    input_data[input_data[index + 3]] = result
+    return index + 4
+
+
+def command_mlt(input_data, index, com_params, adt_params):
+    result = get_data(input_data, index + 1, com_params[1]) * get_data(input_data, index + 2, com_params[2])
+    input_data[input_data[index + 3]] = result
+    return index + 4
+
+
+def command_input(input_data, index, com_params, adt_params):
+    input_data[input_data[index + 1]] = adt_params[0]
+    return index + 2
+
+
+def command_output(input_data, index, com_params, adt_params):
+    diag_code = get_data(input_data, index + 1, com_params[1])
+    print("{} after {} steps".format(diag_code, adt_params[1]))
+    return index + 2
+
+
+def command_jump_if_true(input_data, index, com_params, adt_params):
+    if get_data(input_data, index + 1, com_params[1]) > 0:
+        result = get_data(input_data, index + 2, com_params[2])
+    else:
+        result = index + 3
+    return result
+
+
+def command_jump_if_false(input_data, index, com_params, adt_params):
+    if get_data(input_data, index + 1, com_params[1]) == 0:
+        result = get_data(input_data, index + 2, com_params[2])
+    else:
+        result = index + 3
+    return result
+
+
+def command_less_than(input_data, index, com_params, adt_params):
+    if get_data(input_data, index + 1, com_params[1]) < get_data(input_data, index + 2, com_params[2]):
+        input_data[input_data[index + 3]] = 1
+    else:
+        input_data[input_data[index + 3]] = 0
+    return index + 4
+
+
+def command_equals(input_data, index, com_params, adt_params):
+    if get_data(input_data, index + 1, com_params[1]) == get_data(input_data, index + 2, com_params[2]):
+        input_data[input_data[index + 3]] = 1
+    else:
+        input_data[input_data[index + 3]] = 0
+    return index + 4
+
+
+def command_(input_data, index, com_params):
+    pass
+
+
+command_map = {
+    1: command_add,
+    2: command_mlt,
+    3: command_input,
+    4: command_output,
+    5: command_jump_if_true,
+    6: command_jump_if_false,
+    7: command_less_than,
+    8: command_equals
+}
+
+
 # Task - https://adventofcode.com/2019/day/5
 def main():
     index = 0
@@ -84,45 +147,8 @@ def main():
     while decode_command_params(input_data[index])[0] is not COMMAND_HALT:
         com_params = decode_command_params(input_data[index])
 
-        if com_params[0] is COMMAND_ADD:
-            result = get_data(input_data, index + 1, com_params[1]) + get_data(input_data, index + 2, com_params[2])
-            input_data[input_data[index + 3]] = result
-            index += 4
-        elif com_params[0] is COMMAND_MLT:
-            result = get_data(input_data, index + 1, com_params[1]) * get_data(input_data, index + 2, com_params[2])
-            input_data[input_data[index + 3]] = result
-            index += 4
-        elif com_params[0] is COMMAND_INPUT:
-            input_data[input_data[index + 1]] = input_value
-            index += 2
-        elif com_params[0] is COMMAND_OUTPUT:
-            diag_code = get_data(input_data, index + 1, com_params[1])
-            print("{} after {} steps".format(diag_code, steps))
-            index += 2
-        elif com_params[0] is COMMAND_JUMP_IF_TRUE:
-            if get_data(input_data, index + 1, com_params[1]) > 0:
-                index = get_data(input_data, index + 2, com_params[2])
-            else:
-                index += 3
-        elif com_params[0] is COMMAND_JUMP_IF_FALSE:
-            if get_data(input_data, index + 1, com_params[1]) == 0:
-                index = get_data(input_data, index + 2, com_params[2])
-            else:
-                index += 3
-        elif com_params[0] is COMMAND_LESS_THAN:
-            if get_data(input_data, index + 1, com_params[1]) < get_data(input_data, index + 2, com_params[2]):
-                input_data[input_data[index + 3]] = 1
-            else:
-                input_data[input_data[index + 3]] = 0
-            index += 4
-        elif com_params[0] is COMMAND_EQUALS:
-            if get_data(input_data, index + 1, com_params[1]) == get_data(input_data, index + 2, com_params[2]):
-                input_data[input_data[index + 3]] = 1
-            else:
-                input_data[input_data[index + 3]] = 0
-            index += 4
-        else:
-            raise ValueError("Unknown command")
+        func = command_map.get(com_params[0], lambda: "Unknown command")
+        index = func(input_data, index, com_params, (input_value, steps))
 
         steps += 1
 
