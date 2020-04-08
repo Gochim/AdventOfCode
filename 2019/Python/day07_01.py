@@ -134,28 +134,30 @@ command_map = {
 }
 
 
-# Task - https://adventofcode.com/2019/day/5
-def main():
-    index = 0
-    steps = 0
-    input_data = starting_data.copy()
-    # input_data = [3, 21, 1008, 21, 8, 20, 1005, 20, 22, 107, 8, 21, 20, 1006, 20, 31,
-    #               1106, 0, 36, 98, 0, 0, 1002, 21, 125, 20, 4, 20, 1105, 1, 46, 104,
-    #               999, 1105, 1, 46, 1101, 1000, 1, 20, 4, 20, 1105, 1, 46, 98, 99]
-    input_value = 5
-
-    while decode_command_params(input_data[index])[0] is not COMMAND_HALT:
-        com_params = decode_command_params(input_data[index])
+def execute_program(program, input_value):
+    index, steps = 0, 0
+    while decode_command_params(program[index])[0] is not COMMAND_HALT:
+        com_params = decode_command_params(program[index])
 
         func = command_map.get(com_params[0])
         if func is None:
             raise ValueError("Unknown command")
         else:
-            index = func(input_data, index, com_params, (input_value, steps))
+            index = func(program, index, com_params, (input_value, steps))
 
         steps += 1
 
     print("{} total steps".format(steps))
+
+
+# Task - https://adventofcode.com/2019/day/7
+def main():
+
+    input_data = starting_data.copy()
+    # input_data = [3, 21, 1008, 21, 8, 20, 1005, 20, 22, 107, 8, 21, 20, 1006, 20, 31,
+    #               1106, 0, 36, 98, 0, 0, 1002, 21, 125, 20, 4, 20, 1105, 1, 46, 104,
+    #               999, 1105, 1, 46, 1101, 1000, 1, 20, 4, 20, 1105, 1, 46, 98, 99]
+    execute_program(input_data, 5)
 
 
 if __name__ == '__main__':
