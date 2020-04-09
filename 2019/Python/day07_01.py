@@ -1,35 +1,13 @@
-starting_data = [3, 225, 1, 225, 6, 6, 1100, 1, 238, 225, 104, 0, 1101, 32, 43, 225, 101, 68, 192, 224, 1001, 224, -160,
-                 224, 4, 224, 102, 8, 223, 223, 1001, 224, 2, 224, 1, 223, 224, 223, 1001, 118, 77, 224, 1001, 224, -87,
-                 224, 4, 224, 102, 8, 223, 223, 1001, 224, 6, 224, 1, 223, 224, 223, 1102, 5, 19, 225, 1102, 74, 50,
-                 224, 101, -3700, 224, 224, 4, 224, 1002, 223, 8, 223, 1001, 224, 1, 224, 1, 223, 224, 223, 1102, 89,
-                 18, 225, 1002, 14, 72, 224, 1001, 224, -3096, 224, 4, 224, 102, 8, 223, 223, 101, 5, 224, 224, 1, 223,
-                 224, 223, 1101, 34, 53, 225, 1102, 54, 10, 225, 1, 113, 61, 224, 101, -39, 224, 224, 4, 224, 102, 8,
-                 223, 223, 101, 2, 224, 224, 1, 223, 224, 223, 1101, 31, 61, 224, 101, -92, 224, 224, 4, 224, 102, 8,
-                 223, 223, 1001, 224, 4, 224, 1, 223, 224, 223, 1102, 75, 18, 225, 102, 48, 87, 224, 101, -4272, 224,
-                 224, 4, 224, 102, 8, 223, 223, 1001, 224, 7, 224, 1, 224, 223, 223, 1101, 23, 92, 225, 2, 165, 218,
-                 224, 101, -3675, 224, 224, 4, 224, 1002, 223, 8, 223, 101, 1, 224, 224, 1, 223, 224, 223, 1102, 8, 49,
-                 225, 4, 223, 99, 0, 0, 0, 677, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1105, 0, 99999, 1105, 227, 247, 1105,
-                 1, 99999, 1005, 227, 99999, 1005, 0, 256, 1105, 1, 99999, 1106, 227, 99999, 1106, 0, 265, 1105, 1,
-                 99999, 1006, 0, 99999, 1006, 227, 274, 1105, 1, 99999, 1105, 1, 280, 1105, 1, 99999, 1, 225, 225, 225,
-                 1101, 294, 0, 0, 105, 1, 0, 1105, 1, 99999, 1106, 0, 300, 1105, 1, 99999, 1, 225, 225, 225, 1101, 314,
-                 0, 0, 106, 0, 0, 1105, 1, 99999, 1107, 226, 226, 224, 1002, 223, 2, 223, 1005, 224, 329, 1001, 223, 1,
-                 223, 1007, 677, 226, 224, 1002, 223, 2, 223, 1006, 224, 344, 1001, 223, 1, 223, 108, 677, 226, 224,
-                 102, 2, 223, 223, 1006, 224, 359, 1001, 223, 1, 223, 7, 226, 226, 224, 1002, 223, 2, 223, 1005, 224,
-                 374, 101, 1, 223, 223, 107, 677, 677, 224, 1002, 223, 2, 223, 1006, 224, 389, 1001, 223, 1, 223, 1007,
-                 677, 677, 224, 1002, 223, 2, 223, 1006, 224, 404, 1001, 223, 1, 223, 1107, 677, 226, 224, 1002, 223, 2,
-                 223, 1005, 224, 419, 1001, 223, 1, 223, 108, 226, 226, 224, 102, 2, 223, 223, 1006, 224, 434, 1001,
-                 223, 1, 223, 1108, 226, 677, 224, 1002, 223, 2, 223, 1006, 224, 449, 1001, 223, 1, 223, 1108, 677, 226,
-                 224, 102, 2, 223, 223, 1005, 224, 464, 1001, 223, 1, 223, 107, 226, 226, 224, 102, 2, 223, 223, 1006,
-                 224, 479, 1001, 223, 1, 223, 1008, 226, 226, 224, 102, 2, 223, 223, 1005, 224, 494, 101, 1, 223, 223,
-                 7, 677, 226, 224, 1002, 223, 2, 223, 1005, 224, 509, 101, 1, 223, 223, 8, 226, 677, 224, 1002, 223, 2,
-                 223, 1006, 224, 524, 1001, 223, 1, 223, 1007, 226, 226, 224, 1002, 223, 2, 223, 1006, 224, 539, 101, 1,
-                 223, 223, 1008, 677, 677, 224, 1002, 223, 2, 223, 1006, 224, 554, 101, 1, 223, 223, 1108, 677, 677,
-                 224, 102, 2, 223, 223, 1006, 224, 569, 101, 1, 223, 223, 1107, 226, 677, 224, 102, 2, 223, 223, 1005,
-                 224, 584, 1001, 223, 1, 223, 8, 677, 226, 224, 1002, 223, 2, 223, 1006, 224, 599, 101, 1, 223, 223,
-                 1008, 677, 226, 224, 102, 2, 223, 223, 1006, 224, 614, 1001, 223, 1, 223, 7, 226, 677, 224, 1002, 223,
-                 2, 223, 1005, 224, 629, 101, 1, 223, 223, 107, 226, 677, 224, 102, 2, 223, 223, 1005, 224, 644, 101, 1,
-                 223, 223, 8, 677, 677, 224, 102, 2, 223, 223, 1005, 224, 659, 1001, 223, 1, 223, 108, 677, 677, 224,
-                 1002, 223, 2, 223, 1005, 224, 674, 101, 1, 223, 223, 4, 223, 99, 226]
+import itertools
+
+
+def read_data_to_array(data_file):
+    data = open(data_file, 'r')
+    result = [int(x) for x in data.readline().split(",")]
+    data.close()
+
+    return result
+
 
 PARAMETER_MODE_POSITION = 0
 PARAMETER_MODE_VALUE = 1
@@ -70,19 +48,22 @@ def command_add(input_data, index, com_params, adt_params):
 
 
 def command_mlt(input_data, index, com_params, adt_params):
-    result = get_data(input_data, index + 1, com_params[1]) * get_data(input_data, index + 2, com_params[2])
+    first = get_data(input_data, index + 1, com_params[1])
+    second = get_data(input_data, index + 2, com_params[2])
+    result = first * second
     input_data[input_data[index + 3]] = result
     return index + 4
 
 
 def command_input(input_data, index, com_params, adt_params):
-    input_data[input_data[index + 1]] = adt_params[0]
+    input_data[input_data[index + 1]] = input_params.pop(0)
     return index + 2
 
 
 def command_output(input_data, index, com_params, adt_params):
     diag_code = get_data(input_data, index + 1, com_params[1])
-    print("{} after {} steps".format(diag_code, adt_params[1]))
+    output_params.append(diag_code)
+    print("{} after {} steps".format(diag_code, adt_params))
     return index + 2
 
 
@@ -122,6 +103,9 @@ def command_(input_data, index, com_params):
     pass
 
 
+input_params = []
+output_params = []
+
 command_map = {
     1: command_add,
     2: command_mlt,
@@ -134,30 +118,67 @@ command_map = {
 }
 
 
-def execute_program(program, input_value):
+def execute_program(program):
     index, steps = 0, 0
-    while decode_command_params(program[index])[0] is not COMMAND_HALT:
-        com_params = decode_command_params(program[index])
+    try:
+        while decode_command_params(program[index])[0] is not COMMAND_HALT:
+            com_params = decode_command_params(program[index])
 
-        func = command_map.get(com_params[0])
-        if func is None:
-            raise ValueError("Unknown command")
-        else:
-            index = func(program, index, com_params, (input_value, steps))
+            func = command_map.get(com_params[0])
+            if func is None:
+                raise ValueError("Unknown command")
+            else:
+                index = func(program, index, com_params, (steps))
 
-        steps += 1
+            steps += 1
+    except:
+        print(" == Raised error on step {}".format(steps))
+
 
     print("{} total steps".format(steps))
 
 
+def run_amplifier(starting_data, phase_setting, input_value):
+    global input_params
+    global output_params
+    output_params.clear()
+    program = starting_data.copy()
+    input_params = [phase_setting, input_value]
+    execute_program(program)
+    return output_params[0]
+
+
 # Task - https://adventofcode.com/2019/day/7
 def main():
+    starting_data = read_data_to_array("day07.txt")
+    expected_output = None
+    # starting_data = [3, 15, 3, 16, 1002, 16, 10, 16, 1, 16, 15, 15, 4, 15, 99, 0, 0]
+    # expected_output = 43210
+    # starting_data = [3, 23, 3, 24, 1002, 24, 10, 24, 1002, 23, -1, 23, 101, 5, 23, 23, 1, 24, 23, 23, 4, 23, 99, 0, 0]
+    # expected_output = 54321
+    # starting_data = [3, 31, 3, 32, 1002, 32, 10, 32, 1001, 31, -2, 31, 1007, 31, 0, 33,
+    #                  1002, 33, 7, 33, 1, 33, 31, 31, 1, 32, 31, 31, 4, 31, 99, 0, 0, 0]
+    # expected_output = 65210
 
-    input_data = starting_data.copy()
-    # input_data = [3, 21, 1008, 21, 8, 20, 1005, 20, 22, 107, 8, 21, 20, 1006, 20, 31,
-    #               1106, 0, 36, 98, 0, 0, 1002, 21, 125, 20, 4, 20, 1105, 1, 46, 104,
-    #               999, 1105, 1, 46, 1101, 1000, 1, 20, 4, 20, 1105, 1, 46, 98, 99]
-    execute_program(input_data, 5)
+    phase_settings = [0, 1, 2, 3, 4]
+    max_value = 0
+    max_settings = []
+    for subset in itertools.permutations(phase_settings, len(phase_settings)):
+        cur_value = run_amplifier(starting_data, subset[0], 0)
+        cur_value = run_amplifier(starting_data, subset[1], cur_value)
+        cur_value = run_amplifier(starting_data, subset[2], cur_value)
+        cur_value = run_amplifier(starting_data, subset[3], cur_value)
+        cur_value = run_amplifier(starting_data, subset[4], cur_value)
+
+        if cur_value > max_value:
+            max_value = cur_value
+            max_settings = subset
+
+    if expected_output is not None:
+        print("=== Output is correct {}".format(max_value)) if expected_output == max_value else \
+            print("Received {} instead of {}".format(expected_output, max_value))
+    print(max_value)
+    print(max_settings)
 
 
 if __name__ == '__main__':
