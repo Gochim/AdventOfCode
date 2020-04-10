@@ -1,13 +1,5 @@
-import itertools
-
-
-def read_data_to_array(data_file):
-    data = open(data_file, 'r')
-    result = [int(x) for x in data.readline().split(",")]
-    data.close()
-
-    return result
-
+from itertools import permutations
+from file_utils import read_data_to_array
 
 PARAMETER_MODE_POSITION = 0
 PARAMETER_MODE_VALUE = 1
@@ -163,12 +155,10 @@ def main():
     phase_settings = [0, 1, 2, 3, 4]
     max_value = 0
     max_settings = []
-    for subset in itertools.permutations(phase_settings, len(phase_settings)):
-        cur_value = run_amplifier(starting_data, subset[0], 0)
-        cur_value = run_amplifier(starting_data, subset[1], cur_value)
-        cur_value = run_amplifier(starting_data, subset[2], cur_value)
-        cur_value = run_amplifier(starting_data, subset[3], cur_value)
-        cur_value = run_amplifier(starting_data, subset[4], cur_value)
+    for subset in permutations(phase_settings, len(phase_settings)):
+        cur_value = 0
+        for i in range(len(phase_settings)):
+            cur_value = run_amplifier(starting_data, subset[i], cur_value)
 
         if cur_value > max_value:
             max_value = cur_value
@@ -176,7 +166,8 @@ def main():
 
     if expected_output is not None:
         print("=== Output is correct {}".format(max_value)) if expected_output == max_value else \
-            print("Received {} instead of {}".format(expected_output, max_value))
+            print("Received {} instead of {}".format(max_value, expected_output))
+
     print(max_value)
     print(max_settings)
 
