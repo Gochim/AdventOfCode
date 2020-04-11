@@ -5,3 +5,10 @@ def read_data_to_array(data_file):
     data.close()
 
     return result
+
+
+def read_data_to_string(data_file):
+    data = open(data_file, 'r')
+    result = data.readline()
+    data.close()
+    return result
