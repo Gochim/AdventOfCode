@@ -1,10 +1,75 @@
 from itertools import permutations
+
 from file_utils import read_data_to_array
 
 PARAMETER_MODE_POSITION = 0
 PARAMETER_MODE_VALUE = 1
 
 COMMAND_HALT = 99
+
+input_params = []
+output_params = []
+
+
+# Task - https://adventofcode.com/2019/day/7
+def main():
+    starting_data = read_data_to_array("day07.txt")
+    expected_output = None
+    # starting_data = [3, 15, 3, 16, 1002, 16, 10, 16, 1, 16, 15, 15, 4, 15, 99, 0, 0]
+    # expected_output = 43210
+    # starting_data = [3, 23, 3, 24, 1002, 24, 10, 24, 1002, 23, -1, 23, 101, 5, 23, 23, 1, 24, 23, 23, 4, 23, 99, 0, 0]
+    # expected_output = 54321
+    # starting_data = [3, 31, 3, 32, 1002, 32, 10, 32, 1001, 31, -2, 31, 1007, 31, 0, 33,
+    #                  1002, 33, 7, 33, 1, 33, 31, 31, 1, 32, 31, 31, 4, 31, 99, 0, 0, 0]
+    # expected_output = 65210
+
+    phase_settings = [0, 1, 2, 3, 4]
+    max_value = 0
+    max_settings = []
+    for subset in permutations(phase_settings, len(phase_settings)):
+        cur_value = 0
+        for i in range(len(phase_settings)):
+            cur_value = run_amplifier(starting_data, subset[i], cur_value)
+
+        if cur_value > max_value:
+            max_value = cur_value
+            max_settings = subset
+
+    if expected_output is not None:
+        print("=== Output is correct {}".format(max_value)) if expected_output == max_value else \
+            print("Received {} instead of {}".format(max_value, expected_output))
+
+    print(max_value)
+    print(max_settings)
+
+
+def execute_program(program):
+    index, steps = 0, 0
+    try:
+        while decode_command_params(program[index])[0] is not COMMAND_HALT:
+            com_params = decode_command_params(program[index])
+
+            func = command_map.get(com_params[0])
+            if func is None:
+                raise ValueError("Unknown command")
+            else:
+                index = func(program, index, com_params, (steps))
+
+            steps += 1
+    except:
+        print(" == Raised error on step {}".format(steps))
+
+    print("{} total steps".format(steps))
+
+
+def run_amplifier(starting_data, phase_setting, input_value):
+    global input_params
+    global output_params
+    output_params.clear()
+    program = starting_data.copy()
+    input_params = [phase_setting, input_value]
+    execute_program(program)
+    return output_params[0]
 
 
 def decode_command_params(code):
@@ -95,9 +160,6 @@ def command_(input_data, index, com_params):
     pass
 
 
-input_params = []
-output_params = []
-
 command_map = {
     1: command_add,
     2: command_mlt,
@@ -108,69 +170,6 @@ command_map = {
     7: command_less_than,
     8: command_equals
 }
-
-
-def execute_program(program):
-    index, steps = 0, 0
-    try:
-        while decode_command_params(program[index])[0] is not COMMAND_HALT:
-            com_params = decode_command_params(program[index])
-
-            func = command_map.get(com_params[0])
-            if func is None:
-                raise ValueError("Unknown command")
-            else:
-                index = func(program, index, com_params, (steps))
-
-            steps += 1
-    except:
-        print(" == Raised error on step {}".format(steps))
-
-
-    print("{} total steps".format(steps))
-
-
-def run_amplifier(starting_data, phase_setting, input_value):
-    global input_params
-    global output_params
-    output_params.clear()
-    program = starting_data.copy()
-    input_params = [phase_setting, input_value]
-    execute_program(program)
-    return output_params[0]
-
-
-# Task - https://adventofcode.com/2019/day/7
-def main():
-    starting_data = read_data_to_array("day07.txt")
-    expected_output = None
-    # starting_data = [3, 15, 3, 16, 1002, 16, 10, 16, 1, 16, 15, 15, 4, 15, 99, 0, 0]
-    # expected_output = 43210
-    # starting_data = [3, 23, 3, 24, 1002, 24, 10, 24, 1002, 23, -1, 23, 101, 5, 23, 23, 1, 24, 23, 23, 4, 23, 99, 0, 0]
-    # expected_output = 54321
-    # starting_data = [3, 31, 3, 32, 1002, 32, 10, 32, 1001, 31, -2, 31, 1007, 31, 0, 33,
-    #                  1002, 33, 7, 33, 1, 33, 31, 31, 1, 32, 31, 31, 4, 31, 99, 0, 0, 0]
-    # expected_output = 65210
-
-    phase_settings = [0, 1, 2, 3, 4]
-    max_value = 0
-    max_settings = []
-    for subset in permutations(phase_settings, len(phase_settings)):
-        cur_value = 0
-        for i in range(len(phase_settings)):
-            cur_value = run_amplifier(starting_data, subset[i], cur_value)
-
-        if cur_value > max_value:
-            max_value = cur_value
-            max_settings = subset
-
-    if expected_output is not None:
-        print("=== Output is correct {}".format(max_value)) if expected_output == max_value else \
-            print("Received {} instead of {}".format(max_value, expected_output))
-
-    print(max_value)
-    print(max_settings)
-
 
 if __name__ == '__main__':
     main()
