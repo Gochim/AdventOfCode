@@ -156,7 +156,7 @@ def command_equals(input_data, index, com_params, adt_params):
     return index + 4
 
 
-def command_(input_data, index, com_params):
+def command_(input_data, index, com_params, adt_params):
     pass
 
 

@@ -129,11 +129,11 @@ def command_equals(input_data, index, com_params, adt_params):
     return index + 4
 
 
-def command_halt(self, input_data, index, com_params):
+def command_halt(self, input_data, index, com_params, adt_params):
     return index
 
 
-def command_(self, input_data, index, com_params):
+def command_(self, input_data, index, com_params, adt_params):
     pass
 
 
