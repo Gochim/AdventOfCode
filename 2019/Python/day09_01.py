@@ -1,5 +1,3 @@
-from itertools import permutations
-
 from file_utils import read_data_to_array
 
 PARAMETER_MODE_POSITION = 0
@@ -59,10 +57,9 @@ class Amplifier:
     def execute_program(self):
         try:
             while True:
-                com_params = self._ipr.decode_command_params(self._index)
-
+                com_params = self._ipr.decode_command_params()
                 func = self._command_map.get(com_params[0])
-                self._index = func(com_params)
+                self._ipr.index = func(com_params)
                 self._steps += 1
 
                 if com_params[0] in [COMMAND_HALT, COMMAND_OUTPUT]:
@@ -80,61 +77,61 @@ class Amplifier:
         return input_value
 
     def command_add(self, com_params):
-        first = self._ipr.get_data(self._index + 1, com_params[1])
-        second = self._ipr.get_data(self._index + 2, com_params[2])
-        self._ipr.set_data(self._index + 3, com_params[3], first + second)
-        return self._index + 4
+        first = self._ipr.get_data(1, com_params[1])
+        second = self._ipr.get_data(2, com_params[2])
+        self._ipr.set_data(3, com_params[3], first + second)
+        return self._ipr.index + 4
 
     def command_mlt(self, com_params):
-        first = self._ipr.get_data(self._index + 1, com_params[1])
-        second = self._ipr.get_data(self._index + 2, com_params[2])
-        self._ipr.set_data(self._index + 3, com_params[3], first * second)
-        return self._index + 4
+        first = self._ipr.get_data(1, com_params[1])
+        second = self._ipr.get_data(2, com_params[2])
+        self._ipr.set_data(3, com_params[3], first * second)
+        return self._ipr.index + 4
 
     def command_input(self, com_params):
-        self._ipr.set_data(self._index + 1, com_params[1], self._prepare_input_value())
-        return self._index + 2
+        self._ipr.set_data(1, com_params[1], self._prepare_input_value())
+        return self._ipr.index + 2
 
     def command_output(self, com_params):
-        diag_code = self._ipr.get_data(self._index + 1, com_params[1])
+        diag_code = self._ipr.get_data(1, com_params[1])
         print("{} after {} steps".format(diag_code, self._steps))
         self._output_params = [diag_code]
-        return self._index + 2
+        return self._ipr.index + 2
 
     def command_jump_if_true(self, com_params):
         if self._ipr.get_data(self._index + 1, com_params[1]) > 0:
             result = self._ipr.get_data(self._index + 2, com_params[2])
         else:
-            result = self._index + 3
+            result = self._ipr.index + 3
         return result
 
     def command_jump_if_false(self, com_params):
         if self._ipr.get_data(self._index + 1, com_params[1]) == 0:
             result = self._ipr.get_data(self._index + 2, com_params[2])
         else:
-            result = self._index + 3
+            result = self._ipr.index + 3
         return result
 
     def command_less_than(self, com_params):
-        if self._ipr.get_data(self._index + 1, com_params[1]) < self._ipr.get_data(self._index + 2, com_params[2]):
-            self._ipr.set_data(self._index + 3, com_params[3], 1)
+        if self._ipr.get_data(1, com_params[1]) < self._ipr.get_data(2, com_params[2]):
+            self._ipr.set_data(3, com_params[3], 1)
         else:
-            self._ipr.set_data(self._index + 3, com_params[3], 0)
-        return self._index + 4
+            self._ipr.set_data(3, com_params[3], 0)
+        return self._ipr.index + 4
 
     def command_equals(self, com_params):
-        if self._ipr.get_data(self._index + 1, com_params[1]) == self._ipr.get_data(self._index + 2, com_params[2]):
-            self._ipr.set_data(self._index + 3, com_params[3], 1)
+        if self._ipr.get_data(1, com_params[1]) == self._ipr.get_data(2, com_params[2]):
+            self._ipr.set_data(3, com_params[3], 1)
         else:
-            self._ipr.set_data(self._index + 3, com_params[3], 0)
-        return self._index + 4
+            self._ipr.set_data(3, com_params[3], 0)
+        return self._ipr.index + 4
 
     def command_rel_base_offset(self, com_params):
-        self._ipr.set_rel_base_offset(self._ipr.get_data(self._index + 1, com_params[1]))
-        return self._index + 2
+        self._ipr.set_rel_base_offset(self._ipr.get_data(1, com_params[1]))
+        return self._ipr.index + 2
 
     def command_halt(self, com_params):
-        return self._index
+        return self._ipr.index
 
     def command_(self, com_params):
         pass
@@ -144,21 +141,22 @@ class IntCodeProgram:
     def __init__(self, program) -> None:
         self._program = self._prepare_data(program)
         self._relative_base = 0
+        self.index = 0
 
-    def get_data(self, index, param_mode):
-        adj_index = self._get_index(self._program, index, param_mode)
+    def get_data(self, shift, param_mode):
+        adj_index = self._get_index(self._program, self.index + shift, param_mode)
         result = self._program.get(adj_index) if self._program.get(adj_index) is not None else 0
         return result
 
-    def set_data(self, index, param_mode, value):
-        adj_index = self._get_index(self._program, index, param_mode)
+    def set_data(self, shift, param_mode, value):
+        adj_index = self._get_index(self._program, self.index + shift, param_mode)
         self._program[adj_index] = value
 
     def set_rel_base_offset(self, offset):
         self._relative_base += offset
 
-    def decode_command_params(self, index):
-        code = self._program[index]
+    def decode_command_params(self):
+        code = self._program[self.index]
         command = code % 100
         code //= 100
         param_mode_1 = code % 10
