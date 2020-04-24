@@ -1,5 +1,3 @@
-from itertools import permutations
-
 from file_utils import read_data_to_array
 
 PARAMETER_MODE_POSITION = 0
@@ -9,163 +7,46 @@ PARAMETER_MODE_RELATIVE = 2
 COMMAND_HALT = 99
 COMMAND_INPUT = 3
 COMMAND_OUTPUT = 4
-COMMAND_REL_BASE_OFFSET = 9
 
 
 # Task - https://adventofcode.com/2019/day/9
 def main():
-    starting_data = read_data_to_array("day07.txt")
+    starting_data = read_data_to_array("day09.txt")
     expected_output = None
 
     # Tests
-    # starting_data = [3, 26, 1001, 26, -4, 26, 3, 27, 1002, 27, 2, 27, 1, 27, 26,
-    #                  27, 4, 27, 1001, 28, -1, 28, 1005, 28, 6, 99, 0, 0, 5]
-    # expected_output = 139629729
+    # starting_data = [109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006, 101, 0, 99]
+    # starting_data = [1102, 34915192, 34915192, 7, 4, 7, 99, 0]
+    # starting_data = [104, 1125899906842624, 99]
 
-    # starting_data = [3, 52, 1001, 52, -5, 52, 3, 53, 1, 52, 56, 54, 1007, 54, 5, 55, 1005, 55, 26, 1001, 54,
-    #                  -5, 54, 1105, 1, 12, 1, 53, 54, 53, 1008, 54, 0, 55, 1001, 55, 1, 55, 2, 53, 55, 53, 4,
-    #                  53, 1001, 56, -1, 56, 1005, 56, 6, 99, 0, 0, 0, 0, 10]
-    # expected_output = 18216
+    cur_value = 2
+    return_code = 0
 
-    phase_settings = [5, 6, 7, 8, 9]
-    amp_count = len(phase_settings)
-
-    max_value = 0
-    for phase_settings in permutations(phase_settings, amp_count):
-        cur_value = return_code = 0
-        amplifiers = [Amplifier(starting_data, phase_settings[i]) for i in range(amp_count)]
-
-        while return_code != COMMAND_HALT:
-            for i in range(amp_count):
-                return_code, cur_value = amplifiers[i].run_amplifier(cur_value)
-
-        max_value = max(cur_value, max_value)
-
-    print(max_value)
-
-    if expected_output is not None:
-        print("=== Output is correct {}".format(max_value)) if expected_output == max_value else \
-            print("Received {} instead of {}".format(max_value, expected_output))
-
-
-def decode_command_params(code):
-    command = code % 100
-    code //= 100
-
-    param_mode_1 = code % 10
-    code //= 10
-
-    param_mode_2 = code % 10
-    code //= 10
-
-    param_mode_3 = code % 10
-    code //= 10
-
-    return command, param_mode_1, param_mode_2, param_mode_3
-
-
-def get_data(input_data, index, param_mode, offset = 0):
-    result = 0
-    if param_mode is PARAMETER_MODE_POSITION:
-        result = input_data[input_data[index]]
-    elif param_mode is PARAMETER_MODE_VALUE:
-        result = input_data[index]
-    elif param_mode is PARAMETER_MODE_RELATIVE:
-        result = input_data[input_data[offset + index]]
-
-    return result
-
-
-def command_add(input_data, index, com_params, adt_params):
-    first = get_data(input_data, index + 1, com_params[1])
-    second = get_data(input_data, index + 2, com_params[2])
-    input_data[input_data[index + 3]] = first + second
-    return index + 4
-
-
-def command_mlt(input_data, index, com_params, adt_params):
-    first = get_data(input_data, index + 1, com_params[1])
-    second = get_data(input_data, index + 2, com_params[2])
-    input_data[input_data[index + 3]] = first * second
-    return index + 4
-
-
-def command_input(input_data, index, com_params, adt_params):
-    input_data[input_data[index + 1]] = adt_params
-    return index + 2
-
-
-def command_output(input_data, index, com_params, adt_params):
-    diag_code = get_data(input_data, index + 1, com_params[1])
-    print("{} after {} steps".format(diag_code, adt_params))
-    return index + 2, diag_code
-
-
-def command_jump_if_true(input_data, index, com_params, adt_params):
-    if get_data(input_data, index + 1, com_params[1]) > 0:
-        result = get_data(input_data, index + 2, com_params[2])
-    else:
-        result = index + 3
-    return result
-
-
-def command_jump_if_false(input_data, index, com_params, adt_params):
-    if get_data(input_data, index + 1, com_params[1]) == 0:
-        result = get_data(input_data, index + 2, com_params[2])
-    else:
-        result = index + 3
-    return result
-
-
-def command_less_than(input_data, index, com_params, adt_params):
-    if get_data(input_data, index + 1, com_params[1]) < get_data(input_data, index + 2, com_params[2]):
-        input_data[input_data[index + 3]] = 1
-    else:
-        input_data[input_data[index + 3]] = 0
-    return index + 4
-
-
-def command_equals(input_data, index, com_params, adt_params):
-    if get_data(input_data, index + 1, com_params[1]) == get_data(input_data, index + 2, com_params[2]):
-        input_data[input_data[index + 3]] = 1
-    else:
-        input_data[input_data[index + 3]] = 0
-    return index + 4
-
-
-def command_halt(self, input_data, index, com_params):
-    return index
-
-
-def command_rel_base_offset(self, input_data, index, com_params):
-    new_value = com_params + get_data(input_data, index + 1, com_params[1])
-    return index + 2, new_value
-
-
-def command_(self, input_data, index, com_params):
-    pass
+    amplifier = Amplifier(starting_data)
+    while return_code != COMMAND_HALT:
+        return_code, cur_value = amplifier.run_amplifier(cur_value)
 
 
 class Amplifier:
-    def __init__(self, starting_data, phase_setting) -> None:
+    def __init__(self, starting_data, phase_setting=None) -> None:
         self._phase_setting = phase_setting
-        self._phase_setting_set = False
-        self._program = starting_data.copy()
+        self._phase_setting_set = phase_setting is None
+        self._starting_program = starting_data.copy()
+        self._ipr = IntCodeProgram(starting_data.copy())
         self._output_params = [0]
-        self._rel_base_offset = 0
         self._input_value = self._index = self._steps = 0
 
         self._command_map = {
-            1: command_add,
-            2: command_mlt,
-            3: command_input,
-            4: command_output,
-            5: command_jump_if_true,
-            6: command_jump_if_false,
-            7: command_less_than,
-            8: command_equals,
-            9: command_rel_base_offset,
-            99: command_halt
+            1: self.command_add,
+            2: self.command_mlt,
+            3: self.command_input,
+            4: self.command_output,
+            5: self.command_jump_if_true,
+            6: self.command_jump_if_false,
+            7: self.command_less_than,
+            8: self.command_equals,
+            9: self.command_rel_base_offset,
+            99: self.command_halt
         }
 
     def run_amplifier(self, input_value):
@@ -176,26 +57,16 @@ class Amplifier:
     def execute_program(self):
         try:
             while True:
-                com_params = decode_command_params(self._program[self._index])
-
+                com_params = self._ipr.decode_command_params()
                 func = self._command_map.get(com_params[0])
-                if com_params[0] is COMMAND_INPUT:
-                    self._index = func(self._program, self._index, com_params, self._prepare_input_value())
-                elif com_params[0] is COMMAND_OUTPUT:
-                    self._index, data = func(self._program, self._index, com_params, self._steps)
-                    self._output_params = [data]
-                elif com_params[0] is COMMAND_REL_BASE_OFFSET:
-                    self._index, self._rel_base_offset = func(self._program, self._index, com_params,
-                                                              self._rel_base_offset)
-                else:
-                    self._index = func(self._program, self._index, com_params, self._steps)
-
+                self._ipr.index = func(com_params)
                 self._steps += 1
 
                 if com_params[0] in [COMMAND_HALT, COMMAND_OUTPUT]:
                     break
         except:
-            print(" == Raised error on step {}".format(self._steps))
+            print(" == Raised error on step {} with command {}".format(self._steps, com_params))
+            exit(252)
 
         # noinspection PyUnboundLocalVariable
         return com_params[0], self._output_params[0]
@@ -204,6 +75,118 @@ class Amplifier:
         input_value = self._input_value if self._phase_setting_set else self._phase_setting
         self._phase_setting_set = True
         return input_value
+
+    def command_add(self, com_params):
+        first = self._ipr.get_data(1, com_params[1])
+        second = self._ipr.get_data(2, com_params[2])
+        self._ipr.set_data(3, com_params[3], first + second)
+        return self._ipr.index + 4
+
+    def command_mlt(self, com_params):
+        first = self._ipr.get_data(1, com_params[1])
+        second = self._ipr.get_data(2, com_params[2])
+        self._ipr.set_data(3, com_params[3], first * second)
+        return self._ipr.index + 4
+
+    def command_input(self, com_params):
+        self._ipr.set_data(1, com_params[1], self._prepare_input_value())
+        return self._ipr.index + 2
+
+    def command_output(self, com_params):
+        diag_code = self._ipr.get_data(1, com_params[1])
+        print("{} after {} steps".format(diag_code, self._steps))
+        self._output_params = [diag_code]
+        return self._ipr.index + 2
+
+    def command_jump_if_true(self, com_params):
+        if self._ipr.get_data(self._index + 1, com_params[1]) > 0:
+            result = self._ipr.get_data(self._index + 2, com_params[2])
+        else:
+            result = self._ipr.index + 3
+        return result
+
+    def command_jump_if_false(self, com_params):
+        if self._ipr.get_data(self._index + 1, com_params[1]) == 0:
+            result = self._ipr.get_data(self._index + 2, com_params[2])
+        else:
+            result = self._ipr.index + 3
+        return result
+
+    def command_less_than(self, com_params):
+        if self._ipr.get_data(1, com_params[1]) < self._ipr.get_data(2, com_params[2]):
+            self._ipr.set_data(3, com_params[3], 1)
+        else:
+            self._ipr.set_data(3, com_params[3], 0)
+        return self._ipr.index + 4
+
+    def command_equals(self, com_params):
+        if self._ipr.get_data(1, com_params[1]) == self._ipr.get_data(2, com_params[2]):
+            self._ipr.set_data(3, com_params[3], 1)
+        else:
+            self._ipr.set_data(3, com_params[3], 0)
+        return self._ipr.index + 4
+
+    def command_rel_base_offset(self, com_params):
+        self._ipr.set_rel_base_offset(self._ipr.get_data(1, com_params[1]))
+        return self._ipr.index + 2
+
+    def command_halt(self, com_params):
+        return self._ipr.index
+
+    def command_(self, com_params):
+        pass
+
+
+class IntCodeProgram:
+    def __init__(self, program) -> None:
+        self._program = self._prepare_data(program)
+        self._relative_base = 0
+        self.index = 0
+
+    def get_data(self, shift, param_mode):
+        adj_index = self._get_index(self._program, self.index + shift, param_mode)
+        result = self._program.get(adj_index) if self._program.get(adj_index) is not None else 0
+        return result
+
+    def set_data(self, shift, param_mode, value):
+        adj_index = self._get_index(self._program, self.index + shift, param_mode)
+        self._program[adj_index] = value
+
+    def set_rel_base_offset(self, offset):
+        self._relative_base += offset
+
+    def decode_command_params(self):
+        code = self._program[self.index]
+        command = code % 100
+        code //= 100
+        param_mode_1 = code % 10
+        code //= 10
+        param_mode_2 = code % 10
+        code //= 10
+        param_mode_3 = code % 10
+        code //= 10
+
+        return command, param_mode_1, param_mode_2, param_mode_3
+
+    def _prepare_data(self, data):
+        result = {}
+        for index, item in enumerate(data):
+            result[index] = item
+
+        return result
+
+    def _get_index(self, input_data, index, param_mode):
+        if param_mode is PARAMETER_MODE_POSITION:
+            adj_index = input_data[index]
+        elif param_mode is PARAMETER_MODE_VALUE:
+            adj_index = index
+        elif param_mode is PARAMETER_MODE_RELATIVE:
+            adj_index = self._relative_base + input_data[index]
+        else:
+            raise ValueError("Wrong mode parameter {}".format(param_mode))
+
+        return adj_index
+
 
 if __name__ == '__main__':
     main()
