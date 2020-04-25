@@ -12,3 +12,10 @@ def read_data_to_string(data_file):
     result = data.readline()
     data.close()
     return result
+
+
+def read_map(data_file):
+    data = open(data_file, 'r')
+    result = [list(row.strip()) for row in data]
+    data.close()
+    return result
