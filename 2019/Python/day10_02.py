@@ -49,5 +49,6 @@ def main():
     print("Time: {}", t1 - t0)
     print("Element {} sees {}".format(best_el, best_val))
 
+
 if __name__ == '__main__':
     main()
